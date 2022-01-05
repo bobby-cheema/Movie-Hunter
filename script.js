@@ -2,7 +2,7 @@ const geoapifyKEY = "81227bc9482642b8b313e75b6f99fa21";
 const inputEL = document.getElementById("input");
 const distanceEL = $("#distance")
 const startEL = $("#start")
-let cardEL = "";
+
 const searchEl = document.getElementById("searchcity");
 console.log(searchEl);
 const movielist = (cinema) => {
@@ -37,55 +37,40 @@ const moviesrunningat = async(cinema) => {
 }
 
 const createcard = (cinema_name, cinema_web, cinema_addr, title, poster) => {
+    let cardEL = " ";
     console.log(`MYDATA ${title},${cinema_name}`)
 
     if (cinema_name && title && poster) {
         cardEL += `
-         <div class="card cardclass">
-            <div class="card-image">
-             <figure class="image">
-                <img src="${poster}" alt="Placeholder image">
-             </figure>
-            </div>
-            <div class="card-content">
-            <div class="content">
-              <p> ${cinema_name}  </p>
-              <p> ${cinema_addr}  </p>
-              <p> ${cinema_web}  </p>
-              <p> ${title}  </p>
-
-            
+            <div class="card cardclass mycard">
+            <p  class="title cardtext">${title}</p>
+                <div class="card-image">
+                    <figure class="image is-100x100">
+                        <img src="${poster}" alt="Placeholder image">
+                    </figure>
+                </div>
+                <div class="media-content">
+                <p class="subtitle is-6 cardtext">${cinema_name}
+                  ${cinema_addr}</p>
               </div>
+                
+                  
+                
+               
 
-          </div>
+            </div>
+     
 
 
 
-        </div>
+       
 `
         startEL.append(cardEL)
+        const selection = $(".mycard")
+        selection.on("click", function(event) {
+            console.log('clicked on ', event)
+        })
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -130,8 +115,9 @@ const getmovies = async(lon, lat) => {
 
     if (response.status === 200) {
         const data = await response.json();
+        $(".cardclass").remove();
 
-        console.log("IGOT DATA", data.cinemas)
+        console.log("CARDCLASS", $(".cardclass"))
 
         for (let i in data.cinemas) {
             const cinema_id = data.cinemas[i].id
@@ -148,7 +134,7 @@ const getmovies = async(lon, lat) => {
                 const title = movielist[movie].title
                 const poster = movielist[movie].poster_image_thumbnail
                     //  console.log("MYMOVIEDATA=  ", movielist[movie])
-                $(".cardclass").remove();
+
 
                 createcard(cinema_name, cinema_web, addr, title, poster)
 
